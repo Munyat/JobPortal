@@ -1,8 +1,9 @@
 package com.briancheruiyot.jobportal.company.controller;
 
+import com.briancheruiyot.jobportal.company.controller.service.ICompanyService;
 import com.briancheruiyot.jobportal.dto.CompanyDto;
 import com.briancheruiyot.jobportal.entity.Company;
-import com.briancheruiyot.jobportal.service.ICompanyService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/companies")
 @RequiredArgsConstructor
-@CrossOrigin(origins = { "http://localhost:5173" })
+@CrossOrigin()
 public class CompanyController {
 
     private final ICompanyService companyService;

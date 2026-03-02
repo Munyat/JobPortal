@@ -1,4 +1,4 @@
-package com.briancheruiyot.jobportal.config;
+package com.briancheruiyot.jobportal.config.web;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;

@@ -1,0 +1,11 @@
+services:
+  spring-mysql:
+    image: mysql:8.0.45-debian
+    container_name: spring-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: brian_7899
+      MYSQL_DATABASE: jobportal
+    volumes:
+      - ~/Development/Learning_Java/spring-boot-start/jobportal/jobportal-data:/var/lib/mysql

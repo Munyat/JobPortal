@@ -1,3 +1,4 @@
+-- Active: 1772363610730@@127.0.0.1@3306@jobportal
 -- Create companies table
 CREATE TABLE IF NOT EXISTS companies (
      id BIGINT AUTO_INCREMENT PRIMARY KEY,

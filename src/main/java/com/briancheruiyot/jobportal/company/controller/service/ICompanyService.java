@@ -1,4 +1,4 @@
-package com.briancheruiyot.jobportal.service;
+package com.briancheruiyot.jobportal.company.controller.service;
 
 import com.briancheruiyot.jobportal.dto.CompanyDto;
 import com.briancheruiyot.jobportal.entity.Company;

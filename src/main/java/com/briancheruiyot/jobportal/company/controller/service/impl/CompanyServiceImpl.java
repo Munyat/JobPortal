@@ -1,9 +1,10 @@
-package com.briancheruiyot.jobportal.service.impl;
+package com.briancheruiyot.jobportal.company.controller.service.impl;
 
+import com.briancheruiyot.jobportal.company.controller.service.ICompanyService;
 import com.briancheruiyot.jobportal.dto.CompanyDto;
 import com.briancheruiyot.jobportal.entity.Company;
 import com.briancheruiyot.jobportal.repository.CompanyRepository;
-import com.briancheruiyot.jobportal.service.ICompanyService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

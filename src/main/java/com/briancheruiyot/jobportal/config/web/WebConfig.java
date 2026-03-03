@@ -21,15 +21,15 @@ public class WebConfig implements WebMvcConfigurer {
         configurer.addPathPrefix("/api", _ -> true);
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**") // Fixed: Added leading slash
-                .allowedOrigins("http://localhost:5173",
-                        "http://127.0.0.1:5173")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .exposedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
+    // @Override
+    // public void addCorsMappings(CorsRegistry registry) {
+    // registry.addMapping("/api/**") // Fixed: Added leading slash
+    // .allowedOrigins("http://localhost:5173",
+    // "http://127.0.0.1:5173")
+    // .allowedMethods("*")
+    // .allowedHeaders("*")
+    // .exposedHeaders("*")
+    // .allowCredentials(true)
+    // .maxAge(3600);
+    // }
 }

@@ -9,9 +9,14 @@ import java.util.List;
 public class PathsConfig {
 
     @Bean(name = "publicPaths")
-    public List<String> publicPaths() {
+    List<String> publicPaths() {
         return List.of(
+                "/register/public",
                 "/api/companies/public",
+                "/api/auth/login/public",
+                "/api/auth/register/public",
+                "/api/csrf-token/public",
+                "/api/logging/public",
                 "/api/contacts/public",
                 "/api/swagger-ui.html",
                 "/swagger-ui/**",
@@ -22,7 +27,7 @@ public class PathsConfig {
     }
 
     @Bean(name = "securedPaths")
-    public List<String> securedPaths() {
+    List<String> securedPaths() {
         return List.of(
                 "/api/**");
     }

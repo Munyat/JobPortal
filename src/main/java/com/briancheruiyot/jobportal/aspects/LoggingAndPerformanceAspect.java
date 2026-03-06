@@ -13,7 +13,7 @@ import java.util.Arrays;
 @Slf4j
 public class LoggingAndPerformanceAspect {
 
-    // @Around("@annotation(com.eazybytes.jobportal.aspects.LogAspect)")
+    // @Around("@annotation(com.briancheruiyot.jobportal.aspects.LogAspect)")
     @Around("execution(* com.briancheruiyot.jobportal..*.*(..))")
     public Object logAndMeasureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();

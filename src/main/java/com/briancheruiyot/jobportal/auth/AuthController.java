@@ -46,7 +46,7 @@ public class AuthController {
     private final CompromisedPasswordChecker compromisedPasswordChecker;
 
     @PostMapping("/login/public")
-    public ResponseEntity<LoginResponseDto> postMethodName(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<LoginResponseDto> apiLogin(@RequestBody LoginRequestDto loginRequestDto) {
 
         try {
             var resultAuthentication = authenticationManager
@@ -77,26 +77,28 @@ public class AuthController {
 
     @PostMapping(value = "/register/public", version = "1.0")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDto registerRequestDto) {
-        CompromisedPasswordDecision decision = compromisedPasswordChecker
-                .check(registerRequestDto.password());
-        if (decision.isCompromised()) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("password", "Choose a strong password"));
-        }
-        Optional<JobPortalUser> existingUser = jobPortalUserRepository
-                .readUserByEmailOrMobileNumber(registerRequestDto.email(), registerRequestDto.mobileNumber());
-        if (existingUser.isPresent()) {
-            Map<String, String> errors = new HashMap<>();
-            JobPortalUser jobPortalUser = existingUser.get();
-            if (jobPortalUser.getEmail().equalsIgnoreCase(registerRequestDto.email())) {
-                errors.put("email", "Email is already registered");
-            }
-            if (jobPortalUser.getMobileNumber().equals(registerRequestDto.mobileNumber())) {
-                errors.put("mobileNumber", "Mobile number is already registered");
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
+        // CompromisedPasswordDecision decision = compromisedPasswordChecker
+        // .check(registerRequestDto.password());
+        // if (decision.isCompromised()) {
+        // return ResponseEntity
+        // .status(HttpStatus.BAD_REQUEST)
+        // .body(Map.of("password", "Choose a strong password"));
+        // }
+        // Optional<JobPortalUser> existingUser = jobPortalUserRepository
+        // .readUserByEmailOrMobileNumber(registerRequestDto.email(),
+        // registerRequestDto.mobileNumber());
+        // if (existingUser.isPresent()) {
+        // Map<String, String> errors = new HashMap<>();
+        // JobPortalUser jobPortalUser = existingUser.get();
+        // if (jobPortalUser.getEmail().equalsIgnoreCase(registerRequestDto.email())) {
+        // errors.put("email", "Email is already registered");
+        // }
+        // if
+        // (jobPortalUser.getMobileNumber().equals(registerRequestDto.mobileNumber())) {
+        // errors.put("mobileNumber", "Mobile number is already registered");
+        // }
+        // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        // }
         JobPortalUser jobPortalUser = new JobPortalUser();
         BeanUtils.copyProperties(registerRequestDto, jobPortalUser);
         jobPortalUser.setPasswordHash(passwordEncoder.encode(registerRequestDto.password()));

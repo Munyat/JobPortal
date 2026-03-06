@@ -1,4 +1,4 @@
-package com.briancheruiyot.jobportal.filter;
+package com.briancheruiyot.jobportal.security.filter;
 
 import com.briancheruiyot.jobportal.constants.ApplicationConstants;
 import io.jsonwebtoken.Claims;
@@ -52,7 +52,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
                     if (null != secretKey) {
                         Claims claims = Jwts.parser().verifyWith(secretKey)
                                 .build().parseSignedClaims(jwt).getPayload();
-                        String username = String.valueOf(claims.get("username"));
+                        String username = String.valueOf(claims.get("email"));
                         String roles = String.valueOf(claims.get("roles"));
                         Authentication authentication = new UsernamePasswordAuthenticationToken(username,
                                 null, AuthorityUtils.commaSeparatedStringToAuthorityList(roles));

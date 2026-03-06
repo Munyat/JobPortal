@@ -31,6 +31,7 @@ public class CompanyController {
     public ResponseEntity<List<CompanyDto>> getAllCompanies() {
         List<CompanyDto> companyList = companyService.getAllCompanies();
         return ResponseEntity.ok().body(companyList);
+        // throw new RuntimeException("hello");
     }
 
 }

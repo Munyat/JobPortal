@@ -4,12 +4,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.briancheruiyot.jobportal.security.filter.JwtTokenValidatorFilter;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,15 +46,22 @@ public class JobPortalSecurityConfig {
     @Qualifier("securedPaths")
     private final List<String> securedPaths;
 
+    @Qualifier("adminPaths")
+    private final List<String> adminPaths;
+
     @Bean
     SecurityFilterChain customSecurityFilterChain(HttpSecurity http) {
-        return http.csrf(csrfConfig -> csrfConfig.disable())
+        return http
+                .csrf(csrfConfig -> csrfConfig.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .cors(corsConfig -> corsConfig.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> {
                     publicPaths.forEach(path -> requests.requestMatchers(path).permitAll());
+                    adminPaths.forEach(path -> requests.requestMatchers(path).hasRole("ADMIN"));
                     securedPaths.forEach(path -> requests.requestMatchers(path).authenticated());
                     requests.anyRequest().denyAll();
                 })
+                // .csrf(csrfConfig -> csrfConfig.disable())
                 // requests.requestMatchers("/api/companies/public").permitAll()
                 // .requestMatchers("/api/contacts/public").permitAll())
                 // requests.requestMatchers(RegexRequestMatcher.regexMatcher(".*public$")).permitAll()
@@ -46,8 +71,25 @@ public class JobPortalSecurityConfig {
                 // "/swagger-resources/**",
                 // "/swagger-ui.html",
                 // "/webjars/**").permitAll())
+                .addFilterBefore(new JwtTokenValidatorFilter(publicPaths), BasicAuthenticationFilter.class)
                 .formLogin(flc -> flc.disable())
-                .httpBasic(withDefaults())
+                .httpBasic(hbc -> hbc.disable())
+                // .httpBasic(withDefaults())
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write(
+                                    "{\"error\": \"Access Denied\", \"message\": \"You don't have permission to access this resource\"}");
+                        })
+                // .authenticationEntryPoint((request, response, authException) -> {
+                // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                // response.setContentType("application/json");
+                // response.getWriter().write("{\"error\": \"Unauthorized\", \"message\":
+                // \"Authentication required\"}");
+                // })
+
+                )
                 .build();
     }
 
@@ -63,5 +105,35 @@ public class JobPortalSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
+    }
+
+    // @Bean
+    // UserDetailsService userDetailsService() {
+    // System.out.println(passwordEncoder().encode("brian_7899"));
+    // var user1 = User.builder().username("brian")
+    // .password("$2a$10$OqUZcccTquF6B70SCwXQieVdW28CicB0d7nl41EMIQHPgw99ZawSG").roles("USER").build();
+    // var user2 = User.builder().username("brian2")
+    // .password("$2a$10$OqUZcccTquF6B70SCwXQieVdW28CicB0d7nl41EMIQHPgw99ZawSG").roles("ADMIN").build();
+
+    // return new InMemoryUserDetailsManager(user1, user2);
+    // }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
+        // var authenticationProvider = new
+        // DaoAuthenticationProvider(userDetailsService());
+        // authenticationProvider.setPasswordEncoder(passwordEncoder());
+        // return new ProviderManager(authenticationProvider);
+        return new ProviderManager(authenticationProvider);
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    CompromisedPasswordChecker compromisedPasswordChecker() {
+        return new HaveIBeenPwnedRestApiPasswordChecker();
     }
 }

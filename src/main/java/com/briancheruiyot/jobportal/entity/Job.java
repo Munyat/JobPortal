@@ -80,7 +80,7 @@ public class Job extends BaseEntity {
 
     @NotNull
     @Lob
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Lob
@@ -88,7 +88,7 @@ public class Job extends BaseEntity {
     private String requirements;
 
     @Lob
-    @Column(name = "benefits")
+    @Column(name = "benefits", columnDefinition = "TEXT")
     private String benefits;
 
     @NotNull

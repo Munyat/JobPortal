@@ -37,6 +37,6 @@ public class BaseEntity {
     private Instant updatedAt;
 
     @LastModifiedBy
-    @Column(name = "UPDATED_BY", length = 20, insertable = false)
+    @Column(name = "UPDATED_BY", length = 255, insertable = false)
     private String updatedBy;
 }

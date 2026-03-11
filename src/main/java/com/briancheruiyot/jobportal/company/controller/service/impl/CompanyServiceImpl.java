@@ -5,12 +5,13 @@ import com.briancheruiyot.jobportal.constants.ApplicationConstants;
 import com.briancheruiyot.jobportal.dto.CompanyDto;
 import com.briancheruiyot.jobportal.dto.JobDto;
 import com.briancheruiyot.jobportal.entity.Company;
-import com.briancheruiyot.jobportal.entity.Job;
 import com.briancheruiyot.jobportal.repository.CompanyRepository;
+import com.briancheruiyot.jobportal.util.ApplicationUtility;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class CompanyServiceImpl implements ICompanyService {
         return companyList.stream().map(this::transformCompanyToDto).collect(Collectors.toList());
     }
 
+    @Cacheable("companies")
     @Override
     public List<CompanyDto> getAllCompaniesForAdmin() {
         List<Company> companyList = companyRepository.findAll();
@@ -64,7 +66,7 @@ public class CompanyServiceImpl implements ICompanyService {
 
     private CompanyDto transformCompanyToDto(Company company) {
         List<JobDto> jobDtos = company.getJobs().stream()
-                .map(this::transformJobToDto)
+                .map(job -> ApplicationUtility.transformJobToDto(job))
                 .collect(Collectors.toList());
         return new CompanyDto(company.getId(), company.getName(), company.getLogo(),
                 company.getIndustry(), company.getSize(), company.getRating(),
@@ -72,33 +74,33 @@ public class CompanyServiceImpl implements ICompanyService {
                 company.getEmployees(), company.getWebsite(), company.getCreatedAt(), jobDtos);
     }
 
-    private JobDto transformJobToDto(Job job) {
-        return new JobDto(
-                job.getId(),
-                job.getTitle(),
-                job.getCompany().getId(),
-                job.getCompany().getName(),
-                job.getCompany().getLogo(),
-                job.getLocation(),
-                job.getWorkType(),
-                job.getJobType(),
-                job.getCategory(),
-                job.getExperienceLevel(),
-                job.getSalaryMin(),
-                job.getSalaryMax(),
-                job.getSalaryCurrency(),
-                job.getSalaryPeriod(),
-                job.getDescription(),
-                job.getRequirements(),
-                job.getBenefits(),
-                job.getPostedDate(),
-                job.getApplicationDeadline(),
-                job.getApplicationsCount(),
-                job.getFeatured(),
-                job.getUrgent(),
-                job.getRemote(),
-                job.getStatus());
-    }
+    // private JobDto transformJobToDto(Job job) {
+    // return new JobDto(
+    // job.getId(),
+    // job.getTitle(),
+    // job.getCompany().getId(),
+    // job.getCompany().getName(),
+    // job.getCompany().getLogo(),
+    // job.getLocation(),
+    // job.getWorkType(),
+    // job.getJobType(),
+    // job.getCategory(),
+    // job.getExperienceLevel(),
+    // job.getSalaryMin(),
+    // job.getSalaryMax(),
+    // job.getSalaryCurrency(),
+    // job.getSalaryPeriod(),
+    // job.getDescription(),
+    // job.getRequirements(),
+    // job.getBenefits(),
+    // job.getPostedDate(),
+    // job.getApplicationDeadline(),
+    // job.getApplicationsCount(),
+    // job.getFeatured(),
+    // job.getUrgent(),
+    // job.getRemote(),
+    // job.getStatus());
+    // }
 
     private Company transformCompanyDtoToEntity(CompanyDto companyDto) {
         Company company = new Company();

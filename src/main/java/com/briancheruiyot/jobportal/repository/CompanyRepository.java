@@ -5,6 +5,8 @@ import com.briancheruiyot.jobportal.entity.Company;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +19,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Query("SELECT DISTINCT c FROM Company c JOIN FETCH c.jobs j WHERE j.status = :status")
     List<Company> findAllWithJobsByStatus(@Param("status") String status);
 
+    @Cacheable("jobs")
     List<Company> fetchCompaniesWithJobsByStatus(@Param("status") String status);
 
     @Query(value = "SELECT DISTINCT c.* FROM companies c JOIN jobs j ON c.id = j.company_id WHERE j.status = ?", nativeQuery = true)
@@ -24,6 +27,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     List<Company> fetchCompaniesWithJobsByStatusNative(String status);
 
+    @CacheEvict(value = "companies", allEntries = true)
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     int updateCompanyDetails(
             @Param("id") Long id,
@@ -38,4 +42,9 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
             @Param("employees") Integer employees,
             @Param("website") String website);
 
+    @CacheEvict(value = "companies", allEntries = true)
+    Company save(Company entity);
+
+    @CacheEvict(value = "companies", allEntries = true)
+    void deleteById(Long id);
 }

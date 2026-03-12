@@ -52,6 +52,9 @@ public class JobPortalSecurityConfig {
     @Qualifier("employerPaths")
     private final List<String> employerPaths;
 
+    @Qualifier("jobseekerPaths")
+    private final List<String> jobseekerPaths;
+
     @Bean
     SecurityFilterChain customSecurityFilterChain(HttpSecurity http) {
         return http
@@ -60,6 +63,7 @@ public class JobPortalSecurityConfig {
                 .cors(corsConfig -> corsConfig.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> {
                     publicPaths.forEach(path -> requests.requestMatchers(path).permitAll());
+                    jobseekerPaths.forEach(path -> requests.requestMatchers(path).hasRole("JOB_SEEKER"));
                     adminPaths.forEach(path -> requests.requestMatchers(path).hasRole("ADMIN"));
                     employerPaths.forEach(path -> requests.requestMatchers(path).hasRole("EMPLOYER"));
                     securedPaths.forEach(path -> requests.requestMatchers(path).authenticated());

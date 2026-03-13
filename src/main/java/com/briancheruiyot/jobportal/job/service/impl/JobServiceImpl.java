@@ -1,9 +1,13 @@
 package com.briancheruiyot.jobportal.job.service.impl;
 
+import com.briancheruiyot.jobportal.dto.JobApplicationDto;
 import com.briancheruiyot.jobportal.dto.JobDto;
+import com.briancheruiyot.jobportal.dto.UpdateJobApplicationDto;
 import com.briancheruiyot.jobportal.entity.Job;
+import com.briancheruiyot.jobportal.entity.JobApplication;
 import com.briancheruiyot.jobportal.entity.JobPortalUser;
 import com.briancheruiyot.jobportal.job.service.IJobService;
+import com.briancheruiyot.jobportal.repository.JobApplicationRepository;
 import com.briancheruiyot.jobportal.repository.JobPortalUserRepository;
 import com.briancheruiyot.jobportal.repository.JobRepository;
 import com.briancheruiyot.jobportal.util.ApplicationUtility;
@@ -24,6 +28,7 @@ public class JobServiceImpl implements IJobService {
 
     private final JobRepository jobRepository;
     private final JobPortalUserRepository userRepository;
+    private final JobApplicationRepository jobApplicationRepository;
 
     @Override
     public List<JobDto> getEmployerJobs(String employerEmail) {
@@ -76,6 +81,22 @@ public class JobServiceImpl implements IJobService {
         job.setCompany(employer.getCompany());
         Job savedJob = jobRepository.save(job);
         return ApplicationUtility.transformJobToDto(savedJob);
+    }
+
+    @Override
+    public List<JobApplicationDto> getApplicationsByJobForEmployer(Long jobId) {
+        List<JobApplication> applications = jobApplicationRepository.findByJobIdOrderByAppliedAtAsc(jobId);
+        return applications.stream()
+                .map(jobApplication -> ApplicationUtility.mapToJobApplicationDto(jobApplication))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public boolean updateJobApplication(UpdateJobApplicationDto dto) {
+        int updatedRows = jobApplicationRepository.updateStatusAndNotesById(
+                dto.status().name(), dto.notes(), dto.applicationId(), ApplicationUtility.getLoggedInUser());
+        return updatedRows > 0;
     }
 
     private Job tranformDtoToEntity(JobDto jobDto) {

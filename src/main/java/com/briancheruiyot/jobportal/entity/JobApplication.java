@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,6 +26,11 @@ import java.time.Instant;
 
 @Getter
 @Setter
+@NamedQueries({
+        @NamedQuery(name = "JobApplication.updateStatusAndNotesById", query = "UPDATE JobApplication j SET j.status = :status, j.notes = :notes, "
+                +
+                " j.updatedAt = CURRENT_TIMESTAMP, j.updatedBy = :updatedBy WHERE j.id = :id")
+})
 @Entity
 @Table(name = "job_applications")
 public class JobApplication extends BaseEntity {

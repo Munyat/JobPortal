@@ -26,6 +26,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.briancheruiyot.jobportal.security.filter.JwtTokenValidatorFilter;
+import com.briancheruiyot.jobportal.security.util.CorsProperties;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -54,6 +55,8 @@ public class JobPortalSecurityConfig {
 
     @Qualifier("jobseekerPaths")
     private final List<String> jobseekerPaths;
+
+    private final CorsProperties corsProperties;
 
     @Bean
     SecurityFilterChain customSecurityFilterChain(HttpSecurity http) {
@@ -104,16 +107,31 @@ public class JobPortalSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173"));
-        config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedHeaders(Collections.singletonList("*"));
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
+        config.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        config.setAllowedMethods(corsProperties.getAllowedMethods());
+        config.setAllowedHeaders(corsProperties.getAllowedHeaders());
+        config.setAllowCredentials(corsProperties.getAllowCredentials());
+        config.setMaxAge(corsProperties.getMaxAge());
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+    // @Bean
+    // CorsConfigurationSource corsConfigurationSource() {
+    // CorsConfiguration config = new CorsConfiguration();
+    // config.setAllowedOrigins(Arrays.asList("http://localhost:5173",
+    // "http://127.0.0.1:5173"));
+    // config.setAllowedMethods(Collections.singletonList("*"));
+    // config.setAllowedHeaders(Collections.singletonList("*"));
+    // config.setAllowCredentials(true);
+    // config.setMaxAge(3600L);
+
+    // UrlBasedCorsConfigurationSource source = new
+    // UrlBasedCorsConfigurationSource();
+    // source.registerCorsConfiguration("/**", config);
+    // return source;
+    // }
 
     // @Bean
     // UserDetailsService userDetailsService() {

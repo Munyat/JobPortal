@@ -43,6 +43,46 @@
         </rollingPolicy>
     </appender>
 
+
+    <springProfile name="prod">
+          <!-- ===================== -->
+    <!-- Root Logger -->
+    <!-- ===================== -->
+    <root level="ERROR">
+        <appender-ref ref="RollingFile"/>
+    </root>
+
+    <!-- ===================== -->
+    <!-- Application-specific ERROR logs -->
+    <!-- ===================== -->
+    <logger name="com.briancheruiyot.jobportal"
+            level="ERROR"
+            additivity="false">
+        <appender-ref ref="RollingFile"/>
+    </logger>
+    </springProfile>
+
+
+    <springProfile name="qa">
+          <!-- ===================== -->
+    <!-- Root Logger -->
+    <!-- ===================== -->
+    <root level="INFO">
+        <appender-ref ref="RollingFile"/>
+    </root>
+
+    <!-- ===================== -->
+    <!-- Application-specific ERROR logs -->
+    <!-- ===================== -->
+    <logger name="com.briancheruiyot.jobportal"
+            level="INFO"
+            additivity="false">
+        <appender-ref ref="RollingFile"/>
+    </logger>
+    </springProfile>
+
+
+    <springProfile name="default">
     <!-- ===================== -->
     <!-- Root Logger -->
     <!-- ===================== -->
@@ -60,5 +100,6 @@
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
     </logger>
+    </springProfile>
 
 </configuration>

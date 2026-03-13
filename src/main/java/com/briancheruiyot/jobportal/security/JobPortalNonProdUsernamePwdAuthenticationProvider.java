@@ -19,10 +19,10 @@ import com.briancheruiyot.jobportal.repository.JobPortalUserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Profile("prod")
+@Profile("!prod")
 @Component
 @RequiredArgsConstructor
-public class JobPortalUserNamePwdAuthenticationProvider implements AuthenticationProvider {
+public class JobPortalNonProdUsernamePwdAuthenticationProvider implements AuthenticationProvider {
 
     private final JobPortalUserRepository jobPortalUserRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,11 +36,8 @@ public class JobPortalUserNamePwdAuthenticationProvider implements Authenticatio
                         "User details not found for the user: " + username));
         List<SimpleGrantedAuthority> authorities = List.of(
                 new SimpleGrantedAuthority(jobPortalUser.getRole().getName()));
-        if (passwordEncoder.matches(pwd, jobPortalUser.getPasswordHash())) {
-            return new UsernamePasswordAuthenticationToken(jobPortalUser, null, authorities);
-        } else {
-            throw new BadCredentialsException("Invalid password!");
-        }
+
+        return new UsernamePasswordAuthenticationToken(jobPortalUser, null, authorities);
     }
 
     @Override

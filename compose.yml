@@ -9,3 +9,9 @@ services:
       MYSQL_DATABASE: jobportal
     volumes:
       - ~/Development/Learning_Java/spring-boot-start/jobportal/jobportal-data:/var/lib/mysql
+  grafana-lgtm:
+    image: "grafana/otel-lgtm:latest"
+    ports:
+      - "3000:3000"
+      - "4317:4317"
+      - "4318:4318"

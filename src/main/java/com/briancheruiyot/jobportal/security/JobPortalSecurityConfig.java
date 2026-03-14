@@ -61,7 +61,9 @@ public class JobPortalSecurityConfig {
     @Bean
     SecurityFilterChain customSecurityFilterChain(HttpSecurity http) {
         return http
-                .csrf(csrfConfig -> csrfConfig.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrf(csrfConfig -> csrfConfig.ignoringRequestMatchers(
+                        "/jobportal/actuator/**")
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .cors(corsConfig -> corsConfig.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> {

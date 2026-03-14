@@ -2,10 +2,16 @@ package com.briancheruiyot.jobportal;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import com.briancheruiyot.jobportal.security.util.CorsProperties;
+
+@EnableCaching
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
+@EnableConfigurationProperties(value = { CorsProperties.class })
 public class JobportalApplication {
 
 	public static void main(String[] args) {

@@ -22,13 +22,39 @@ public class PathsConfig {
                 "/api/v3/api-docs/**",
                 "/swagger-resources/**",
                 "/swagger-ui.html",
-                "/webjars/**");
+                "/webjars/**",
+                "/jobportal/actuator/**",
+                "/api/todos/**",
+                "/api/posts/**"
+
+        );
     }
 
     @Bean(name = "securedPaths")
     public List<String> securedPaths() {
         return List.of(
                 "/api/**");
+    }
+
+    @Bean(name = "jobseekerPaths")
+    public List<String> jobseekerPaths() {
+        return List.of(
+                "/api/users/profile/jobseeker",
+                "/api/users/profile/picture/jobseeker",
+                "/api/users/profile/resume/jobseeker",
+                "/api/users/saved-jobs/${jobId}/jobseeker",
+                "/api/users/saved-jobs/jobseeker",
+                "/api/users/job-applications/jobseeker",
+                "/api/users/job-applications/${jobId}/jobseeker");
+    }
+
+    @Bean(name = "employerPaths")
+    public List<String> employerPaths() {
+        return List.of(
+                "/api/jobs/employer",
+                "/api/jobs/${jobId}/status/employer",
+                "/api/jobs/applications/${jobId}/employer",
+                "/api/jobs/applications/employer");
     }
 
     @Bean(name = "adminPaths")

@@ -13,7 +13,7 @@ import org.springframework.web.service.registry.ImportHttpServices;
 public class HttpServiceClientConfig {
 
     @Bean
-    public RestClientHttpServiceGroupConfigurer groupConfigurer() {
+    RestClientHttpServiceGroupConfigurer groupConfigurer() {
         return groups -> {
             groups.filterByName("todos").forEachClient(
                     (group, restClientBuilder) -> {

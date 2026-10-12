@@ -1010,6 +1010,4 @@ Why `verify` rather than `test`: it runs everything up to and including integrat
 
 ## 22. License and contact
 
-Add a `LICENSE` file (for example MIT) and state the license here.
-
 Open an issue for bugs or feature requests. Please include logs, reproduction steps and the relevant request and response.
